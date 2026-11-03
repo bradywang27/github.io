@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC 人格特質測驗</title>
+    <!-- Tailwind CSS for utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warm: {
+                            50: '#FAF9F6',
+                            100: '#F5F2EB',
+                            200: '#E8E2D5',
+                            700: '#5A5348',
+                            800: '#3D372E',
+                            900: '#26221C'
+                        },
+                        disc: {
+                            tiger: '#B85252',     /* 磚紅 / 暗紅 */
+                            peacock: '#CC8A36',   /* 芥末黃 / 暖褐 */
+                            koala: '#5C7E6A',     /* 鼠尾草綠 */
+                            owl: '#526B88',       /* 灰藍 */
+                            chameleon: '#7D6B8D' /* 淡紫 */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF9F6;
+            color: #3D372E;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Smooth page transitions */
+        .page-transition {
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+        }
+
+        /* Custom scrollbar for better visual integration */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F2EB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1C9B8;
+            border-radius: 4px;
+        }
+
+        /* Large touch-friendly option cards */
+        .option-card {
+            transition: all 0.15s ease-in-out;
+            touch-action: manipulation;
+        }
+        .option-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-warm-800 antialiased selection:bg-warm-200">
+
+    <!-- Header Navigation Bar -->
+    <header class="w-full bg-white/80 backdrop-blur border-b border-warm-200 sticky top-0 z-50">
+        <div class="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="goToHome()">
+                <div class="w-8 h-8 rounded-full bg-warm-800 text-white flex items-center justify-center font-bold text-lg">D</div>
+                <span class="font-bold text-xl tracking-wide text-warm-900">DISC 人格測驗</span>
+            </div>
+            <div id="header-progress-text" class="hidden text-sm font-semibold text-warm-700 bg-warm-100 px-3 py-1 rounded-full">
+                第 <span id="current-q-num">1</span> / 20 題
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-2xl mx-auto px-4 py-6 flex-grow flex flex-col justify-center">
+
+        <!-- ================= PAGE 1: HOME PAGE ================= -->
+        <section id="page-home" class="page-transition space-y-6 text-center py-4">
+            <div class="inline-block px-4 py-1.5 bg-warm-100 border border-warm-200 rounded-full text-warm-700 font-medium text-sm md:text-base">
+                🌱 探索內在特質 ‧ 促進和諧溝通
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl font-bold text-warm-900 leading-tight">
+                DISC 人格特質測驗
+            </h1>
+            
+            <p class="text-xl text-warm-700 font-medium max-w-lg mx-auto">
+                「認識自己，也更懂得與人相處」
+            </p>
+
+            <div class="bg-white p-6 md:p-8 rounded-2xl border border-warm-200 shadow-sm text-left space-y-4 my-6">
+                <h2 class="text-lg font-bold text-warm-900 border-b border-warm-100 pb-2 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-disc-peacock" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    測驗須知
+                </h2>
+                <ul class="space-y-3 text-lg text-warm-700 leading-relaxed">
+                    <li class="flex items-start">
+                        <span class="text-disc-koala mr-2 flex-shrink-0">●</span>
+                        <span>本測驗共 <strong>20 道題目</strong>，請選出最符合你平時狀況的選項。</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-disc-koala mr-2 flex-shrink-0">●</span>
+                        <span>不用想太久，憑<strong>第一直覺選擇</strong>即可。</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-disc-koala mr-2 flex-shrink-0">●</span>
+                        <span>測驗沒有標準答案，請依照平常真正的自己回答，非理想中的自己。</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-disc-koala mr-2 flex-shrink-0">●</span>
+                        <span>無需登入或輸入任何個人資料，測驗結果於瀏覽器內即時分析。</span>
+                    </li>
+                </ul>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full sm:w-auto min-w-[240px] min-h-[56px] px-8 py-4 bg-warm-800 hover:bg-warm-900 active:bg-black text-white text-xl font-bold rounded-2xl shadow-md transition duration-200 flex items-center justify-center mx-auto space-x-2 cursor-pointer">
+                <span>開始測驗</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </section>
+
+        <!-- ================= PAGE 2: QUIZ PAGE ================= -->
+        <section id="page-quiz" class="page-transition hidden space-y-6">
+            <!-- Progress Bar -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center text-base md:text-lg font-bold text-warm-700">
+                    <span id="quiz-progress-num">第 1 題／20 題</span>
+                    <span id="quiz-progress-percent" class="text-disc-owl">5%</span>
+                </div>
+                <div class="w-full h-3.5 bg-warm-200 rounded-full overflow-hidden">
+                    <div id="progress-bar-fill" class="h-full bg-warm-800 transition-all duration-300 ease-out" style="width: 5%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl border border-warm-200 shadow-sm space-y-6">
+                <!-- Question Title -->
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold text-warm-900 leading-snug">
+                    題目載入中...
+                </h2>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-4">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+
+            <!-- Quiz Navigation -->
+            <div class="flex justify-between items-center pt-2">
+                <button id="btn-prev" onclick="prevQuestion()" class="min-h-[48px] px-5 py-2.5 bg-warm-100 hover:bg-warm-200 text-warm-800 font-bold rounded-xl text-lg flex items-center space-x-1 cursor-pointer invisible">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    <span>上一題</span>
+                </button>
+                <span class="text-sm text-warm-700 font-medium">點擊卡片即可自動進入下一題</span>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: RESULT PAGE ================= -->
+        <section id="page-result" class="page-transition hidden space-y-8 my-4">
+            
+            <!-- Result Main Card -->
+            <div id="result-header-card" class="bg-white p-6 md:p-8 rounded-3xl border-2 shadow-sm text-center space-y-4 relative overflow-hidden">
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full text-base font-bold bg-warm-100 text-warm-800">
+                    <span>測驗分析結果</span>
+                </div>
+                
+                <div class="py-2">
+                    <div id="result-emoji" class="text-6xl md:text-7xl mb-3 animate-bounce">🐯</div>
+                    <h1 id="result-title" class="text-3xl md:text-4xl font-extrabold tracking-tight">老虎型</h1>
+                    <p id="result-subtitle" class="text-xl font-bold mt-1 opacity-90">實際／支配型</p>
+                </div>
+
+                <p id="result-summary" class="text-lg md:text-xl font-medium leading-relaxed bg-warm-50 p-4 rounded-2xl border border-warm-100 text-warm-800">
+                    載入摘要中...
+                </p>
+
+                <!-- Feature Tags -->
+                <div id="result-tags" class="flex flex-wrap justify-center gap-2 pt-2">
+                    <!-- Tags injected by JS -->
+                </div>
+            </div>
+
+            <!-- Score Distribution Bar Chart -->
+            <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-4">
+                <h3 class="text-lg md:text-xl font-bold text-warm-900 border-b border-warm-100 pb-2">
+                    📊 你的四項特質得分分布
+                </h3>
+                <div id="score-bars-container" class="space-y-3 pt-1">
+                    <!-- Score bars injected by JS -->
+                </div>
+                <p id="chameleon-note" class="hidden text-base font-semibold text-disc-chameleon bg-purple-50 p-3 rounded-xl border border-purple-100 text-center">
+                    ✨ 你的最高分與最低分差距不超過 1 分，四種特質相當平均，屬於「變色龍型」。
+                </p>
+            </div>
+
+            <!-- Detailed Analysis Sections -->
+            <div id="result-details" class="space-y-6">
+                
+                <!-- Work & Action Style -->
+                <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-3">
+                    <h3 class="text-xl font-bold text-warm-900 flex items-center">
+                        <span class="mr-2">💼</span> 工作與行動特質
+                    </h3>
+                    <p id="desc-work" class="text-lg text-warm-700 leading-relaxed whitespace-pre-line"></p>
+                </div>
+
+                <!-- Interpersonal Style -->
+                <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-3">
+                    <h3 class="text-xl font-bold text-warm-900 flex items-center">
+                        <span class="mr-2">🤝</span> 人際互動與溝通
+                    </h3>
+                    <p id="desc-interpersonal" class="text-lg text-warm-700 leading-relaxed whitespace-pre-line"></p>
+                </div>
+
+                <!-- Strengths & Focus Areas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-3">
+                        <h3 class="text-xl font-bold text-warm-900 flex items-center text-emerald-800">
+                            <span class="mr-2">🌟</span> 核心優勢
+                        </h3>
+                        <p id="desc-strengths" class="text-lg text-warm-700 leading-relaxed whitespace-pre-line"></p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-3">
+                        <h3 class="text-xl font-bold text-warm-900 flex items-center text-amber-800">
+                            <span class="mr-2">💡</span> 需要留意的特質
+                        </h3>
+                        <p id="desc-notices" class="text-lg text-warm-700 leading-relaxed whitespace-pre-line"></p>
+                    </div>
+                </div>
+
+                <!-- Suitable Roles -->
+                <div class="bg-white p-6 rounded-2xl border border-warm-200 shadow-sm space-y-3">
+                    <h3 class="text-xl font-bold text-warm-900 flex items-center">
+                        <span class="mr-2">🎯</span> 適合職務與角色
+                    </h3>
+                    <div id="desc-roles" class="flex flex-wrap gap-2 pt-1">
+                        <!-- Roles injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Restart Button -->
+            <div class="pt-4 text-center">
+                <button onclick="restartQuiz()" class="w-full sm:w-auto min-w-[220px] min-h-[56px] px-8 py-4 bg-warm-800 hover:bg-warm-900 active:bg-black text-white text-xl font-bold rounded-2xl shadow-md transition duration-200 flex items-center justify-center mx-auto space-x-2 cursor-pointer">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>再測一次</span>
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white border-t border-warm-200 py-6 text-center text-warm-700 text-sm">
+        <div class="max-w-2xl mx-auto px-4 space-y-1">
+            <p class="font-medium">DISC 人格特質測驗 ‧ 自我探索與團隊合作指南</p>
+            <p class="text-xs text-warm-700 opacity-80">資料來源：根據 L7 補充教案-DISC測驗規範製作</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        /* ==========================================================================
+           1. QUESTION DATA (Exactly extracted from PDF document)
+           ========================================================================== */
+        const questions = [
+            {
+                id: 1,
+                question: "1. 當你和朋友一起用餐時，在選擇用餐或是吃什麼時，你常是：",
+                options: [
+                    "決定者：意見不同時，通常都是決定者。",
+                    "氣氛製造者：吃什麼，很能帶動情緒氣氛。",
+                    "附和者：隨便，沒意見。",
+                    "意見提供者：常去否定別人的提議，自己卻又沒意見，也不做任何決定。"
+                ]
+            },
+            {
+                id: 2,
+                question: "2. 當你買衣服時，你是：",
+                options: [
+                    "不易受售貨員影響，「心中自有定見」。",
+                    "售貨員的親切及好的感受，常會促進你的購買。",
+                    "找熟悉的店購買。",
+                    "品質與價錢是否成比例，價錢是否合理？"
+                ]
+            },
+            {
+                id: 3,
+                question: "3. 你的消費習慣是：",
+                options: [
+                    "找到要買的東西，付錢走人。",
+                    "很隨意的逛，不特定買什麼。",
+                    "有一定的消費習慣，不太喜歡變化。",
+                    "較注意東西好不好，較有成本觀念。"
+                ]
+            },
+            {
+                id: 4,
+                question: "4. 你的朋友，以一句話來形容你，他們會說：",
+                options: [
+                    "蠻「鴨霸」的。",
+                    "熱情洋溢。",
+                    "溫和斯文。",
+                    "要求完美。"
+                ]
+            },
+            {
+                id: 5,
+                question: "5. 你自認那一種形容，最能表現你的特色：",
+                options: [
+                    "果敢的，能接受挑戰。",
+                    "生動活潑，不拘小節。",
+                    "愛傾聽，喜歡穩定。",
+                    "處世謹慎小心，重數據分析。"
+                ]
+            },
+            {
+                id: 6,
+                question: "6. 你覺得做事的重點，應該是：",
+                options: [
+                    "what，做什麼？重結果。",
+                    "who，誰來做？重感受(過程)",
+                    "why，為何做？重品質。",
+                    "how，怎麼做？重執行。"
+                ]
+            },
+            {
+                id: 7,
+                question: "7. 與同事有意見衝突(或不同)時，你是：",
+                options: [
+                    "說服對方，聽從自己的意見。",
+                    "問其他同事或上司之意見，尋求支持。",
+                    "退讓，以和為貴。",
+                    "與衝突者協調，找尋最好的意見。"
+                ]
+            },
+            {
+                id: 8,
+                question: "8. 什麼樣的工作環境，最能鼓舞你：",
+                options: [
+                    "能讓你決定事情，具領導地位的。",
+                    "同事相處愉快，處處受歡迎。",
+                    "穩定中求發展。",
+                    "講品質，重效率的工作。"
+                ]
+            },
+            {
+                id: 9,
+                question: "9. 以下的溝通方式，那一項最符合你：",
+                options: [
+                    "直接了當，較權威式的。",
+                    "表情豐富，肢體語言較多。",
+                    "先聽聽別人意見，而後溫和的表達自己的意見。",
+                    "不露感情的，理多於情，愛分析，較冷靜。"
+                ]
+            },
+            {
+                id: 10,
+                question: "10. 在每一次會議中或公司決議提案時，你所扮演的角色為何：",
+                options: [
+                    "據理力爭者。",
+                    "協調者。",
+                    "贊同多數者。",
+                    "分析所有提案以供參考者。"
+                ]
+            },
+            {
+                id: 11,
+                question: "11. 下列描述何者最適合你：",
+                options: [
+                    "我做事一向以具體，短期能達到目標；決定快速，立即得到結果。",
+                    "在本性上，我喜歡跟人交往，各式各樣的人都行，甚至陌生人也行。",
+                    "我不喜歡強出頭，寧可當後補。",
+                    "我是一個自我約束，很守紀律的人，凡事依既定目標行事。"
+                ]
+            },
+            {
+                id: 12,
+                question: "12. 下列描述何者最適合你：",
+                options: [
+                    "我喜歡有變化，激烈且競爭的環境，是個可接受挑戰的人。",
+                    "我喜歡社交，也喜歡招待人。",
+                    "我喜歡成為小組的一份子，固守一般性程序。",
+                    "我會花很多時間去研究事與人。"
+                ]
+            },
+            {
+                id: 13,
+                question: "13. 下列描述何者最適合你：",
+                options: [
+                    "我喜歡按自己的方法做事，不在乎別人對我的觀感，只要成功。",
+                    "有人跟我意見不一致時，我會很難過(困擾)。",
+                    "我知道做些改變是有必要的，但即使如此我還是覺得少冒險來的好。",
+                    "我對自己及他人的期望很高，這些都是為符合我的高標準。"
+                ]
+            },
+            {
+                id: 14,
+                question: "14. 下列描述何者最適合你：",
+                options: [
+                    "我擅長於處理棘手的問題。",
+                    "我是個很熱心的人，我喜歡跟別人一起工作。",
+                    "我喜歡聽而不喜歡說話，我一開口都說得很委婉溫和。",
+                    "處理事我較不動感情，是就是，不把感情牽扯進來，也較少與人閒聊。"
+                ]
+            },
+            {
+                id: 15,
+                question: "15. 下列描述何者最適合你：",
+                options: [
+                    "我喜歡有競爭，有競爭才能把潛能完全發揮出來。",
+                    "我較感性，與人相處或處事較不注意細節。",
+                    "我是個理性的組員，順著群眾，具有高度的團體意識。",
+                    "對事我喜歡去研究，講求證據與保證。"
+                ]
+            },
+            {
+                id: 16,
+                question: "16. 下列描述何者最適合你：",
+                options: [
+                    "我喜歡能力與權威，這是我想要的。",
+                    "我有時情緒化，一旦生氣常氣過頭。有時置身於有趣事務中，往往無法掌握時間。",
+                    "我喜歡按部就班，穩紮穩打，慢慢地做事，而不喜歡破斧沈舟般的方式。",
+                    "我很注意事務與人的細節。"
+                ]
+            },
+            {
+                id: 17,
+                question: "17. 下列描述何者最適合你：",
+                options: [
+                    "對直接關係的環境，我有喜歡去掌握及支配他人的傾向。",
+                    "在團體中我喜歡打成一片，活活潑潑有氣氛，有感情的相處。",
+                    "我較遵守傳統的步驟做事，不喜歡有很大的變化。",
+                    "在沒有掌握事實的真象與更多資料之前，我寧可保持現狀。"
+                ]
+            },
+            {
+                id: 18,
+                question: "18. 下列描述何者最適合你：",
+                options: [
+                    "我在與人溝通時，直接了當的說，不喜歡兜圈子。",
+                    "我喜歡幫助人，相親相愛。",
+                    "我不喜歡多變化的環境，而要穩定安全的生活方式。",
+                    "凡事我要求的是準確無誤，講求的是高品質，高標準的處事原則。"
+                ]
+            },
+            {
+                id: 19,
+                question: "19. 下列描述何者最適合你：",
+                options: [
+                    "我不喜歡別人逗我開心，不喜歡太多話的人。",
+                    "我喜歡參加團體活動，因為與很多人在一起感覺很好。",
+                    "對事情我沒有太多要求與意見，喜歡靜靜的有耐心的做。",
+                    "我做事要有一套經過計劃設計的標準作業程序，來引導作業方向。"
+                ]
+            },
+            {
+                id: 20,
+                question: "20. 下列描述何者最適合你：",
+                options: [
+                    "我討厭別人告訴我事情該如何做，因我自有定見，我不喜歡被別人支配。",
+                    "我是個生氣勃勃外向的人，別人愛跟我一起工作，因為別人與我一起工作，就會激起他們的熱心，我就是有那能耐。",
+                    "我喜歡獨處，若與人生活在一起，會注意儘量不去打擾他人的居家生活。",
+                    "我很少加入別人的閒聊中，當話題有趣時，我會找更多的資料，小心的進行外交策略。"
+                ]
+            }
+        ];
+
+        /* ==========================================================================
+           2. ANALYSIS RESULT DATA (Strictly based on PDF content)
+           ========================================================================== */
+        const resultProfiles = {
+            tiger: {
+                key: 'tiger',
+                title: '老虎型 🐯',
+                subtitle: '實際／支配型（D）',
+                emoji: '🐯',
+                themeColor: '#B85252', // 磚紅
+                bgLight: 'bg-red-50',
+                borderColor: 'border-red-200',
+                textColor: 'text-red-900',
+                summary: '具備極強的實踐力、果斷力與支配領導特質。以目標為導向，熱愛挑戰與壓力，是團隊中勇往直前的火車頭。',
+                tags: ['實踐力', '果斷力', '目標導向', '熱愛挑戰', '以事為導向', '喜歡掌控'],
+                workStyle: '• 工作環境忙碌、正式、有效率、有組織且功能性高。\n• 好勝、喜歡改變且討厭現況。身為愛探險的行動派，要的是直接答案與立即的結果。\n• 沒什麼耐心（常展現於扣桌子、搖椅子等動作），溝通時偏好談論「產能」、「功能」、「期限」與「成本」。\n• 做事一向以具體、短期能達到目標為原則；決定快速，要求立即得到成果。',
+                interpersonalStyle: '• 支配度高，非常有個人想法，且極擅長讓別人依自己的方法做事。\n• 會透過直接且壓迫性的行為掌控環境；但當現況不利時，通常能壓住反對的聲音。\n• 溝通方式直接了當，較權威式、講求效率，說話尖銳而不圓融。',
+                strengths: '• 極佳的果斷力與領導執行力。\n• 能承擔高度壓力與風險，積極突破現狀。\n• 專注於結果與實質效益，能帶動團隊前進。',
+                notices: '• 缺乏耐心，容易給予他人過大的壓迫感。\n• 以事為導向，可能忽略身邊夥伴的感受與情緒溝通。\n• 需要注意語氣避免過於霸道（鴨霸）或過度主導。',
+                roles: ['業務經理', '企業家', '將軍', '創業者', '海外事業部經理', '指揮', '導演', '警察']
+            },
+            peacock: {
+                key: 'peacock',
+                title: '孔雀型 🦚',
+                subtitle: '社交／影響型（I）',
+                emoji: '🦚',
+                themeColor: '#CC8A36', // 芥末黃
+                bgLight: 'bg-amber-50',
+                borderColor: 'border-amber-200',
+                textColor: 'text-amber-900',
+                summary: '熱愛表現、專注於人際互動，善於運用群眾魅力與創意。個性樂觀溫和，能迅速凝聚團隊氛圍。',
+                tags: ['人際互動', '群眾魅力', '富有創意', '樂觀熱情', '團隊合作', '重視關係'],
+                workStyle: '• 步調快速又即興，工作環境友善、個人化且可激發創意（有時較為雜亂無章）。\n• 追求時髦，喜愛行動自由與物質享受，懂得享受工作與生活的樂趣。\n• 擅長說服他人共同合作，是團體中最受歡迎的人，也是最能吹起領導號角的人物。',
+                interpersonalStyle: '• 溝通能力強，對自己的社交能力極具自信，能迅速結合他人達成目標。\n• 表情豐富、肢體語言多，生動活潑，對他人的感覺較為敏感圓滑。\n• 喜愛社交與招待他人，非常外向且以人為主，珍惜所有人際關係。',
+                strengths: '• 極強的感染力、說服力與溝通協調能力。\n• 性格樂觀熱情，能為團隊帶來正面能量與創意思維。\n• 人緣極佳，善於整合資源與團隊合作。',
+                notices: '• 處事較不注意細節，容易忽視條理與計畫細節。\n• 天生對人性過度樂觀，容易輕信他人而吃了悶虧。\n• 生氣時有時容易情緒化，或因投入有趣事物而忽略時間掌控。',
+                roles: ['演員', '領隊', '講師', '表演藝術者', '業務', '主持人', '廣告創意', '政客']
+            },
+            koala: {
+                key: 'koala',
+                title: '無尾熊型 🐨',
+                subtitle: '親切／安定型（S）',
+                emoji: '🐨',
+                themeColor: '#5C7E6A', // 鼠尾草綠
+                bgLight: 'bg-emerald-50',
+                borderColor: 'border-emerald-200',
+                textColor: 'text-emerald-900',
+                summary: '喜愛安定與和諧，具有極佳的持續力與耐心。善於傾聽與設身處地，是團隊中最可靠忠誠的後盾。',
+                tags: ['安定平穩', '具耐心', '善於傾聽', '忠誠可靠', '服務導向', '同理心'],
+                workStyle: '• 偏好穩定且可預測的工作環境，需要改變時希望被事先告知。\n• 按部就班、穩紮穩打，具備長期的專注力，能堅守崗位到最後一刻。\n• 在專案中非常適合扮演幕僚角色，是按部就班的邏輯思考者與忠誠夥伴。',
+                interpersonalStyle: '• 溫和斯文、謙虛，熱愛長期的工作夥伴關係，富同情心與服務精神。\n• 溝通時總是先聽聽別人意見，再溫和委婉地表達自己的看法，退讓以和為貴。\n• 尊重團體意識，不喜歡強出頭或冒險，靜靜且有耐心地做好本分。',
+                strengths: '• 極高的耐力、穩定度與高度忠誠度。\n• 具同理心，是非常優秀且溫暖的聆聽者與協調者。\n• 能維持組織內部穩健運作，堅守品質與長期承諾。',
+                notices: '• 不喜變動與冒險，對快速變革可能產生排斥或抗拒心態。\n• 習慣將想法藏在心裡，不輕易直接表達個人需求。\n• 一旦下定決心或全盤瞭解狀況後，有時也會展現頑強固執的一面。',
+                roles: ['公務員', '作業員', '餐飲服務', '傳統產業技術員', '社工', '行政秘書', '非營利組織', '客服人員']
+            },
+            owl: {
+                key: 'owl',
+                title: '貓頭鷹型 🦉',
+                subtitle: '分析型（C）',
+                emoji: '🦉',
+                themeColor: '#526B88', // 灰藍
+                bgLight: 'bg-blue-50',
+                borderColor: 'border-blue-200',
+                textColor: 'text-blue-900',
+                summary: '心思精明、思路清晰，善於思考與系統化規劃。講求秩序、邏輯與精準度，對品質與細節有高標準。',
+                tags: ['縝密思考', '邏輯規劃', '精準無誤', '遵守紀律', '重數據', '高標準'],
+                workStyle: '• 凡事要求精準無誤，講求高品質、高標準的處事原則。\n• 需要有一套經過計劃設計的標準作業程序（SOP）來引導工作方向。\n• 盡忠職守、遵守紀律與規矩，重視數據與證據保證，做事講求條理秩序。',
+                interpersonalStyle: '• 不露感情、理多於情，講求事實與分析，表現冷靜沉著。\n• 溝通時不把感情牽扯進來，較少進行無意義的閒聊，重視理性協調。\n• 對自己與他人的要求都很高，未掌握足夠事實真相前寧可保持現狀。',
+                strengths: '• 極強的邏輯思考、分析與計畫能力。\n• 注重細節，能提供無懈可擊的高品質成果。\n• 嚴格自我約束，遵守紀律與制度。',
+                notices: '• 有時過於追求完美而顯得過度挑剔或缺乏彈性。\n• 較不動感情，可能給人冷漠或不易親近的距離感。\n• 處理棘手問題前需要較多資料與思考時間，決策步調較慢。',
+                roles: ['教授', '工程師', '醫師', '律師', '會計師', '精算師', '顧問', '老師', '科學家', '宗教相關']
+            },
+            chameleon: {
+                key: 'chameleon',
+                title: '變色龍型 🦎',
+                subtitle: '全方位型（四種特質均衡）',
+                emoji: '🦎',
+                themeColor: '#7D6B8D', // 淡紫
+                bgLight: 'bg-purple-50',
+                borderColor: 'border-purple-200',
+                textColor: 'text-purple-900',
+                summary: '你的四項特質得分非常接近（最高與最低差距 ≤ 1），屬於具備全方位適應力的「變色龍型」。沒有強烈的個人立場，能靈活彈性地融入各種環境。',
+                tags: ['全方位', '高適應力', '中立折衝', '環境融合', '靈活變通', '協調溝通'],
+                workStyle: '• 屬全方位人物，沒有凸出的極端個性，對事也沒有強烈的個人意識型態。\n• 只要任務確實、目標清楚，都能恰如其分地完成工作，以善變應變為其專長。\n• 能夠密切融合於各種不同團隊與工作環境中，展現極高彈性。',
+                interpersonalStyle: '• 事事求中立，傾向站在客觀沒有立場的位置。\n• 在衝突的環境中，是個能遊走於折衝間的高手。\n• 能夠為企業進行對內與對外的各種交涉與協調工作。',
+                strengths: '• 極高環境適應能力與角色切換彈性。\n• 中立客觀，非常適合進行衝突調解與跨部門溝通。\n• 能隨團隊需要隨時補位，發揮綜合功能。',
+                notices: '• 缺乏極為顯著的個人特色或主導風格。\n• 在缺乏明確目標或任務指示時，可能容易陷入猶豫不定。\n• 需注意避免因為事事求中立而讓人感覺欠缺個人立場。',
+                roles: ['整合企劃', '跨部門協調者', '顧問', '專案經理', '外交溝通者', '中介調解人', '綜合管理人才']
+            }
+        };
+
+        /* ==========================================================================
+           3. APPLICATION STATE & LOGIC
+           ========================================================================== */
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(20).fill(null); // stores index 0..3 for each q
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQuestion();
+        });
+
+        function goToHome() {
+            showPage('page-home');
+            document.getElementById('header-progress-text').classList.add('hidden');
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(20).fill(null);
+            showPage('page-quiz');
+            document.getElementById('header-progress-text').classList.remove('hidden');
+            renderQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showPage(pageId) {
+            ['page-home', 'page-quiz', 'page-result'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === pageId) {
+                    el.classList.remove('hidden');
+                    el.style.opacity = '1';
+                } else {
+                    el.classList.add('hidden');
+                    el.style.opacity = '0';
+                }
+            });
+        }
+
+        /* Render Current Question */
+        function renderQuestion() {
+            const qData = questions[currentQuestionIndex];
+            
+            // Update question info
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('quiz-progress-num').innerText = `第 ${currentQuestionIndex + 1} 題／20 題`;
+            
+            const progressPercent = Math.round(((currentQuestionIndex + 1) / 20) * 100);
+            document.getElementById('quiz-progress-percent').innerText = `${progressPercent}%`;
+            document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+
+            document.getElementById('question-text').innerText = qData.question;
+
+            // Render options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            const currentSelected = userAnswers[currentQuestionIndex];
+
+            qData.options.forEach((optText, optIdx) => {
+                const isSelected = currentSelected === optIdx;
+                
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `option-card w-full text-left p-4 md:p-5 rounded-2xl border-2 transition-all flex items-start space-x-3 cursor-pointer ${
+                    isSelected 
+                    ? 'border-warm-800 bg-warm-100 shadow-sm ring-1 ring-warm-800' 
+                    : 'border-warm-200 bg-warm-50 hover:bg-white hover:border-warm-300'
+                }`;
+
+                // Option index badge (①, ②, ③, ④)
+                const numbers = ['①', '②', '③', '④'];
+                
+                btn.innerHTML = `
+                    <span class="text-xl font-bold ${isSelected ? 'text-warm-900' : 'text-warm-700'} flex-shrink-0 mt-0.5">
+                        ${numbers[optIdx]}
+                    </span>
+                    <span class="text-lg md:text-xl font-medium leading-relaxed ${isSelected ? 'text-warm-900 font-bold' : 'text-warm-800'}">
+                        ${escapeHtml(optText)}
+                    </span>
+                `;
+
+                btn.onclick = () => selectOption(optIdx);
+                container.appendChild(btn);
+            });
+
+            // Back button visibility
+            const prevBtn = document.getElementById('btn-prev');
+            if (currentQuestionIndex > 0) {
+                prevBtn.classList.remove('invisible');
+            } else {
+                prevBtn.classList.add('invisible');
+            }
+        }
+
+        /* Handle Selection */
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+
+            // Visual feedback update
+            renderQuestion();
+
+            // Delay briefly for visual tactile feel, then navigate
+            setTimeout(() => {
+                if (currentQuestionIndex < 19) {
+                    currentQuestionIndex++;
+                    renderQuestion();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    calculateAndShowResult();
+                }
+            }, 180);
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        /* ==========================================================================
+           4. SCORING & RESULT COMPUTATION
+           ========================================================================== */
+        function calculateAndShowResult() {
+            // Count options 1, 2, 3, 4
+            const counts = {
+                tiger: 0,    // Option 1 (index 0)
+                peacock: 0,  // Option 2 (index 1)
+                koala: 0,    // Option 3 (index 2)
+                owl: 0       // Option 4 (index 3)
+            };
+
+            userAnswers.forEach(ans => {
+                if (ans === 0) counts.tiger++;
+                else if (ans === 1) counts.peacock++;
+                else if (ans === 2) counts.koala++;
+                else if (ans === 3) counts.owl++;
+            });
+
+            const values = Object.values(counts);
+            const maxScore = Math.max(...values);
+            const minScore = Math.min(...values);
+
+            let finalType = '';
+
+            // CHAMELEON RULE (PDF Requirement):
+            // If Max Score - Min Score <= 1, it's Chameleon Type
+            if ((maxScore - minScore) <= 1) {
+                finalType = 'chameleon';
+            } else {
+                // Determine highest score type
+                // In case of tie among non-chameleon cases, priority takes first max
+                if (counts.tiger === maxScore) finalType = 'tiger';
+                else if (counts.peacock === maxScore) finalType = 'peacock';
+                else if (counts.koala === maxScore) finalType = 'koala';
+                else if (counts.owl === maxScore) finalType = 'owl';
+            }
+
+            renderResultPage(finalType, counts);
+            showPage('page-result');
+            document.getElementById('header-progress-text').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* Render Result Page UI */
+        function renderResultPage(typeKey, counts) {
+            const profile = resultProfiles[typeKey];
+
+            // Header card colors & text
+            const headerCard = document.getElementById('result-header-card');
+            headerCard.style.borderColor = profile.themeColor;
+
+            document.getElementById('result-emoji').innerText = profile.emoji;
+            document.getElementById('result-title').innerText = profile.title;
+            document.getElementById('result-title').style.color = profile.themeColor;
+            document.getElementById('result-subtitle').innerText = profile.subtitle;
+            document.getElementById('result-summary').innerText = profile.summary;
+
+            // Render Tag Pills
+            const tagsContainer = document.getElementById('result-tags');
+            tagsContainer.innerHTML = '';
+            profile.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'px-3.5 py-1.5 rounded-full text-base font-semibold border';
+                span.style.backgroundColor = `${profile.themeColor}15`;
+                span.style.borderColor = `${profile.themeColor}40`;
+                span.style.color = profile.themeColor;
+                span.innerText = `# ${tag}`;
+                tagsContainer.appendChild(span);
+            });
+
+            // Score Distribution Bars
+            const barsContainer = document.getElementById('score-bars-container');
+            barsContainer.innerHTML = '';
+
+            const typesInfo = [
+                { key: 'tiger', name: '老虎型 (D)', count: counts.tiger, color: '#B85252' },
+                { key: 'peacock', name: '孔雀型 (I)', count: counts.peacock, color: '#CC8A36' },
+                { key: 'koala', name: '無尾熊型 (S)', count: counts.koala, color: '#5C7E6A' },
+                { key: 'owl', name: '貓頭鷹型 (C)', count: counts.owl, color: '#526B88' }
+            ];
+
+            typesInfo.forEach(item => {
+                const percent = Math.round((item.count / 20) * 100);
+                const isMain = (typeKey === item.key);
+
+                const row = document.createElement('div');
+                row.className = 'space-y-1';
+                row.innerHTML = `
+                    <div class="flex justify-between items-center text-base font-bold">
+                        <span class="${isMain ? 'text-warm-900 font-extrabold' : 'text-warm-700'}">${item.name}</span>
+                        <span class="text-warm-800">${item.count} 題 (${percent}%)</span>
+                    </div>
+                    <div class="w-full h-3.5 bg-warm-100 rounded-full overflow-hidden border border-warm-200">
+                        <div class="h-full transition-all duration-500 rounded-full" style="width: ${Math.max(percent, 4)}%; background-color: ${item.color};"></div>
+                    </div>
+                `;
+                barsContainer.appendChild(row);
+            });
+
+            // Chameleon banner toggle
+            const chameleonNote = document.getElementById('chameleon-note');
+            if (typeKey === 'chameleon') {
+                chameleonNote.classList.remove('hidden');
+            } else {
+                chameleonNote.classList.add('hidden');
+            }
+
+            // Detailed descriptions
+            document.getElementById('desc-work').innerText = profile.workStyle;
+            document.getElementById('desc-interpersonal').innerText = profile.interpersonalStyle;
+            document.getElementById('desc-strengths').innerText = profile.strengths;
+            document.getElementById('desc-notices').innerText = profile.notices;
+
+            // Suitable Roles Pills
+            const rolesContainer = document.getElementById('desc-roles');
+            rolesContainer.innerHTML = '';
+            profile.roles.forEach(role => {
+                const pill = document.createElement('span');
+                pill.className = 'px-4 py-2 bg-warm-100 text-warm-900 border border-warm-200 text-lg font-semibold rounded-xl';
+                pill.innerText = role;
+                rolesContainer.appendChild(pill);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(20).fill(null);
+            showPage('page-home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Utility: HTML escape string
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
